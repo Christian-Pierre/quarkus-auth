@@ -5,7 +5,7 @@ import io.smallrye.jwt.build.Jwt;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.enterprise.context.RequestScoped;
+
 import jakarta.inject.Inject;
 
 import java.util.Collections;
