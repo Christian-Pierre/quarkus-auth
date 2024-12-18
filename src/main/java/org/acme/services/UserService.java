@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -75,5 +76,19 @@ public class UserService {
         }
         user.setToken(token);
         user.setTokenTime(Instant.now());
+    }
+
+    public boolean isTokenExpired(Long userId) {
+        Optional<User> userOptional = userRepository.findByIdOptional(userId);
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("User not found with ID: " + userId);
+        }
+        User user = userOptional.get();
+        Instant tokenTime = user.getTokenTime();
+        if (tokenTime == null) {
+            return true; // Consider token expired if no tokenTime is set
+        }
+        Instant now = Instant.now();
+        return Duration.between(tokenTime, now).getSeconds() > 3600;
     }
 }

@@ -82,4 +82,18 @@ public class UserResource {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }
     }
+
+    // Check token for a user
+    @GET
+    @Path("/{id}/token-status")
+    public Response checkTokenStatus(@PathParam("id") Long id) {
+        try {
+            boolean isExpired = userService.isTokenExpired(id);
+            //true is expired token
+            //false is valid token 
+            return Response.ok(isExpired).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
 }
