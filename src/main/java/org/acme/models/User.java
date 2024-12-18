@@ -1,5 +1,9 @@
 package org.acme.models;
 
+import java.time.Duration;
+import java.time.Instant;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +18,9 @@ public class User {
     private String username;
     private String password;
     private String role;
+    @Column(length = 1000, nullable = true)
+    private String token;
+    private Instant tokenTime;    
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -27,4 +34,19 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+    
+    public String getToken() { return token; }
+    public void setToken(String token) { this.token = token; }
+    
+    public Instant getTokenTime() { return tokenTime; }
+    public void setTokenTime(Instant tokenTime) { this.tokenTime = tokenTime; }
+
+    // Method to check if the token has expired
+    public boolean isTokenExpired() {
+        if (tokenTime == null) {
+            return true; // Consider token expired if no tokenTime is set
+        }
+        Instant now = Instant.now();
+        return Duration.between(tokenTime, now).getSeconds() > 3600;
+    }
 }
